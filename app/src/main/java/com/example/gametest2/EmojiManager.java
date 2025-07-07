@@ -5,82 +5,62 @@ import java.util.*;
 public class EmojiManager {
 
     private final Map<String, String> emojiMap = new HashMap<>();
+    private final Map<String, Integer> emojiDrawables = new HashMap<>();
+    private final Map<String, String> emojiGifs = new HashMap<>();
     private final Map<Set<String>, String> combinations = new HashMap<>();
     private final Set<String> sidebarEmojis = new LinkedHashSet<>();
 
     public EmojiManager() {
-        // Basic emojis
-        emojiMap.put("happy", "\uD83D\uDE00"); // 😀
-        emojiMap.put("arm", "\uD83D\uDCAA");   // 💪
-        emojiMap.put("sad", "\uD83D\uDE22");   // 😢
-        emojiMap.put("car", "\uD83D\uDE97");   // 🚗
-        emojiMap.put("fire", "\uD83D\uDD25");  // 🔥
-        emojiMap.put("ice", "\u2744\uFE0F");   // ❄️
-        emojiMap.put("rocket", "\uD83D\uDE80"); // 🚀
-        emojiMap.put("brain", "\uD83E\uDDE0"); // 🧠
-        emojiMap.put("money", "\uD83D\uDCB0"); // 💰
-        emojiMap.put("tree", "\uD83C\uDF33");  // 🌳
-        emojiMap.put("water", "\uD83D\uDCA7"); // 💧
-        emojiMap.put("cat", "\uD83D\uDC31");   // 🐱
-        emojiMap.put("dog", "\uD83D\uDC36");   // 🐶
+        // Basic emojis (Unicode)
+        emojiMap.put("happy", "\uD83D\uDE00");
+        emojiMap.put("arm", "\uD83D\uDCAA");
+        emojiMap.put("sad", "\uD83D\uDE22");
+        emojiMap.put("car", "\uD83D\uDE97");
+        emojiMap.put("fire", "\uD83D\uDD25");
+        emojiMap.put("ice", "\u2744\uFE0F");
+        emojiMap.put("rocket", "\uD83D\uDE80");
+        emojiMap.put("brain", "\uD83E\uDDE0");
+        emojiMap.put("money", "\uD83D\uDCB0");
+        emojiMap.put("tree", "\uD83C\uDF33");
+        emojiMap.put("water", "\uD83D\uDCA7");
+        emojiMap.put("cat", "\uD83D\uDC31");
+        emojiMap.put("dog", "\uD83D\uDC36");
 
-        // Combinations
-        addCombination("happy", "arm", "super_happy");
-        emojiMap.put("super_happy", "\uD83D\uDE01"); // 😁
+//        // --- PNG results (place these PNGs in drawable/) ---
+//        emojiDrawables.put("super_happy", R.drawable.super_happy);
+//        emojiDrawables.put("fast_car", R.drawable.fast_car);
+//        emojiDrawables.put("taxi", R.drawable.taxi);
+//        emojiDrawables.put("ash", R.drawable.ash);
+//        emojiDrawables.put("friendship", R.drawable.friendship);
+//        emojiDrawables.put("confused", R.drawable.confused);
 
-        addCombination("sad", "car", "broken_car");
-        emojiMap.put("broken_car", "\uD83D\uDE97\uD83D\uDE22"); // 🚗😢
+        // --- GIF results (place these GIFs in assets/) ---
+        emojiGifs.put("explosion", "file:///android_asset/rocketfly.gif");
+        emojiGifs.put("genius", "file:///android_asset/genius.gif");
+        emojiGifs.put("fruit_tree", "file:///android_asset/fruit_tree.gif");
+        emojiGifs.put("space_cat", "file:///android_asset/space_cat.gif");
+        emojiGifs.put("road_trip", "file:///android_asset/coete.gif");
+        emojiGifs.put("broken_car", "file:///android_asset/broken_car.gif");
 
-        addCombination("arm", "car", "fast_car");
-        emojiMap.put("fast_car", "\uD83C\uDFC1"); // 🏁
+        // --- Combinations: 50/50 split ---
+        addCombination("happy", "arm", "super_happy");       // PNG
+        addCombination("sad", "car", "broken_car");          // GIF
+        addCombination("arm", "car", "fast_car");            // PNG
+        addCombination("happy", "sad", "confused");          // PNG
+        addCombination("fire", "car", "explosion");          // GIF
+        addCombination("ice", "fire", "water");              // Unicode
+        addCombination("rocket", "fire", "genius");          // GIF
+        addCombination("money", "car", "taxi");              // PNG
+        addCombination("tree", "fire", "ash");               // PNG
+        addCombination("water", "tree", "fruit_tree");       // GIF
+        addCombination("cat", "dog", "friendship");          // PNG
+        addCombination("cat", "rocket", "space_cat");        // GIF
+        addCombination("dog", "car", "road_trip");           // GIF
 
-        addCombination("happy", "sad", "confused");
-        emojiMap.put("confused", "\uD83D\uDE15"); // 😕
-
-        addCombination("fire", "car", "explosion");
-        emojiMap.put("explosion", "\uD83D\uDE92\uD83D\uDD25"); // 🚒🔥
-
-        addCombination("ice", "fire", "water");
-        // 💧 already defined
-
-        addCombination("rocket", "fire", "launch");
-        emojiMap.put("launch", "\uD83D\uDE80\uD83D\uDD25"); // 🚀🔥
-
-        addCombination("brain", "rocket", "genius");
-        emojiMap.put("genius", "\uD83E\uDDE0\uD83D\uDE80"); // 🧠🚀
-
-        addCombination("money", "car", "taxi");
-        emojiMap.put("taxi", "\uD83D\uDE96"); // 🚖
-
-        addCombination("tree", "fire", "ash");
-        emojiMap.put("ash", "\uD83D\uDD25\uD83C\uDF32"); // 🔥🌲
-
-        addCombination("water", "tree", "fruit_tree");
-        emojiMap.put("fruit_tree", "\uD83C\uDF4E\uD83C\uDF33"); // 🍎🌳
-
-        addCombination("cat", "dog", "friendship");
-        emojiMap.put("friendship", "\uD83D\uDC31\uD83D\uDC36\u2764\uFE0F"); // 🐱🐶❤️
-
-        addCombination("cat", "rocket", "space_cat");
-        emojiMap.put("space_cat", "\uD83D\uDC31\uD83D\uDE80"); // 🐱🚀
-
-        addCombination("dog", "car", "road_trip");
-        emojiMap.put("road_trip", "\uD83D\uDC36\uD83D\uDE97"); // 🐶🚗
-
-        // Initial sidebar emojis
-        sidebarEmojis.add("happy");
-        sidebarEmojis.add("arm");
-        sidebarEmojis.add("sad");
-        sidebarEmojis.add("car");
-        sidebarEmojis.add("fire");
-        sidebarEmojis.add("ice");
-        sidebarEmojis.add("rocket");
-        sidebarEmojis.add("brain");
-        sidebarEmojis.add("money");
-        sidebarEmojis.add("tree");
-        sidebarEmojis.add("water");
-        sidebarEmojis.add("cat");
-        sidebarEmojis.add("dog");
+        sidebarEmojis.addAll(Arrays.asList(
+                "happy", "arm", "sad", "car", "fire", "ice", "rocket", "brain",
+                "money", "tree", "water", "cat", "dog"
+        ));
     }
 
     private void addCombination(String a, String b, String result) {
@@ -99,6 +79,14 @@ public class EmojiManager {
 
     public String getEmojiUnicode(String name) {
         return emojiMap.getOrDefault(name, "?");
+    }
+
+    public Integer getEmojiDrawable(String name) {
+        return emojiDrawables.get(name);
+    }
+
+    public String getEmojiGif(String name) {
+        return emojiGifs.get(name);
     }
 
     public Set<String> getSidebarEmojis() {
