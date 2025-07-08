@@ -8,7 +8,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.gametest2"
+        applicationId = "com.lucasrossiu.dumbemoji"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
